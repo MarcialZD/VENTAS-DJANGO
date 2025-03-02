@@ -10,16 +10,25 @@ class Category(models.Model):
     def __str__(self):
         return f'Category {self.name}'
 
-class Product(models.Model):
+class Tag(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    class Meta:
+        verbose_name_plural = 'Tags'
+    def __str__(self):
+        return f'Tag {self.name}'
+
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=255,verbose_name='Nombre del Producto')
+    description = models.TextField('Descripcion del producto')
     price = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True,help_text='Si el producto está activo se mostrará en la página principal')
     #
     create_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='products', blank=True, null=True)
-
+    image = models.ImageField(upload_to='products', blank=True, null=True,help_text='Imagen debe ser de 300x300')
+    tag= models.ManyToManyField(Tag,related_name='products',blank=True)
     def __str__(self):
         return self.name
 
